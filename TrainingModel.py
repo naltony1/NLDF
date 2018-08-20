@@ -8,7 +8,7 @@ import os
 
 def load_training_list():
 
-    with open('dataset/MSRA-B/train_cvpr2013.txt') as f:
+    with open('dataset/MSRA-B/train_cvpr_2013.txt') as f:
         lines = f.read().splitlines()
 
     files = []
@@ -26,7 +26,7 @@ def load_train_val_list():
     files = []
     labels = []
 
-    with open('dataset/MSRA-B/train_cvpr2013.txt') as f:
+    with open('dataset/MSRA-B/train_cvpr_2013.txt') as f:
         lines = f.read().splitlines()
 
     for line in lines:
@@ -44,7 +44,7 @@ def load_train_val_list():
 
 
 if __name__ == "__main__":
-
+    tf.reset_default_graph()
     model = NLDF.Model()
     model.build_model()
 
@@ -62,10 +62,10 @@ if __name__ == "__main__":
     train_list, label_list = load_train_val_list()
 
     n_epochs = 20
-    img_size = NLDF.img_size
-    label_size = NLDF.label_size
+    img_size = int(NLDF.img_size)
+    label_size = int(NLDF.label_size)
 
-    for i in xrange(n_epochs):
+    for i in range(n_epochs):
         whole_loss = 0.0
         whole_acc = 0.0
         count = 0
@@ -111,9 +111,9 @@ if __name__ == "__main__":
             count = count + 1
 
             if count % 200 == 0:
-                print "Loss of %d images: %f, Accuracy: %f" % (count, (whole_loss/count), (whole_acc/count))
+                print ("Loss of %d images: %f, Accuracy: %f" % (count, (whole_loss/count), (whole_acc/count)))
 
-        print "Epoch %d: %f" % (i, (whole_loss/len(train_list)))
+        print ("Epoch %d: %f" % (i, (whole_loss/len(train_list))))
 
-    os.mkdir('Model')
-    saver.save(sess, 'Model/model.ckpt', global_step=n_epochs)
+    os.mkdir('zl_train_model')
+    saver.save(sess, 'zl_train_model/model.ckpt', global_step=n_epochs)
