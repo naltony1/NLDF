@@ -7,11 +7,12 @@ import tensorflow as tf
 import time
 import vgg16
 
-
+tf.reset_default_graph()
 def load_img_list(dataset):
-
+    if dataset == 'zl_test':
+        path = 'dataset/zl_test/'
     if dataset == 'MSRA-B':
-        path = 'dataset/MSRA-B/image'
+        path = 'dataset/MSRA-B/'
     elif dataset == 'HKU-IS':
         path = 'dataset/HKU-IS/imgs'
     elif dataset == 'DUT-OMRON':
@@ -42,9 +43,10 @@ if __name__ == "__main__":
     saver = tf.train.Saver()
     saver.restore(sess, ckpt.model_checkpoint_path)
 
-    datasets = ['MSRA-B', 'HKU-IS', 'DUT-OMRON',
-                'PASCAL-S', 'ECSSD', 'SOD']
+#    datasets = ['MSRA-B', 'HKU-IS', 'DUT-OMRON',
+#                'PASCAL-S', 'ECSSD', 'SOD']
 
+    datasets = ['zl_test']
     if not os.path.exists('Result'):
         os.mkdir('Result')
 
@@ -72,11 +74,11 @@ if __name__ == "__main__":
 
                 start_time = time.time()
                 result = sess.run(model.Prob,
-                                  feed_dict={model.input_holder: img,
-                                             model.keep_prob: 1})
+                                  feed_dict={model.input_holder: img
+                                             })
                 print("--- %s seconds ---" % (time.time() - start_time))
 
-                result = np.reshape(result, (label_size, label_size, 2))
+                result = np.reshape(result, (int(label_size), int(label_size), 2))
                 result = result[:, :, 0]
 
                 result = cv2.resize(np.squeeze(result), (img_shape[1], img_shape[0]))

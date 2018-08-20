@@ -122,7 +122,7 @@ class Model:
         return deconv
 
     def Contrast_Layer(self, input_, k_s=3):
-        h_s = k_s / 2
+        h_s = int(k_s / 2)
         return tf.subtract(input_, tf.nn.avg_pool(tf.pad(input_, [[0, 0], [h_s, h_s], [h_s, h_s], [0, 0]], 'SYMMETRIC'),
                                                   ksize=[1, k_s, k_s, 1], strides=[1, 1, 1, 1], padding='VALID'))
 
@@ -166,13 +166,13 @@ class Model:
 
 if __name__ == "__main__":
 
-    img = cv2.imread("dataset/MSRA-B/image/0_1_1339.jpg")
+    img = cv2.imread("dataset/MSRA-B/0_1_1339.jpg")
 
     h, w = img.shape[0:2]
     img = cv2.resize(img, (img_size,img_size)) - vgg16.VGG_MEAN
     img = img.reshape((1, img_size, img_size, 3))
 
-    label = cv2.imread("dataset/MSRA-B/annotation/0_1_1339.png")[:, :, 0]
+    label = cv2.imread("dataset/MSRA-B/0_1_1339.png")[:, :, 0]
     label = cv2.resize(label, (label_size, label_size))
     label = label.astype(np.float32) / 255
     label = np.stack((label, 1-label), axis=2)
